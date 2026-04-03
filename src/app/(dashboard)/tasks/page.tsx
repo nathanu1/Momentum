@@ -3,14 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CreateTaskDialog } from "@/components/features/create-task-dialog";
-import { TaskActions } from "./task-actions";
+import { TaskRow } from "./task-row";
 import { CheckSquare, Circle, Clock, AlertTriangle } from "lucide-react";
-
-const priorityIndicator: Record<string, string> = {
-  High: "bg-red-500",
-  Medium: "bg-amber-500",
-  Low: "bg-blue-500",
-};
 
 export default async function TasksPage() {
   const user = await getUser();
@@ -83,30 +77,7 @@ export default async function TasksPage() {
               </div>
               <div className="space-y-2">
                 {section.tasks.map((task) => (
-                  <Card key={task.id} className="group hover:shadow-sm transition-shadow">
-                    <CardContent className="flex items-center gap-3 py-3">
-                      <TaskActions id={task.id} isDone={task.status === "Done"} />
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium truncate ${task.status === "Done" ? "line-through text-muted-foreground" : ""}`}>
-                          {task.title}
-                        </p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-xs text-muted-foreground">{task.category}</span>
-                          {task.dueDate && (
-                            <span className="text-xs text-muted-foreground">
-                              · {task.dueDate.toLocaleDateString()}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className={`h-2 w-2 rounded-full ${priorityIndicator[task.priority]}`} />
-                        <Badge variant="secondary" className="text-xs">
-                          {task.priority}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <TaskRow key={task.id} task={task} />
                 ))}
               </div>
             </div>
